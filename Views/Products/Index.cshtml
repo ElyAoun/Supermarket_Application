@@ -1,0 +1,124 @@
+﻿@model Supermarket_Application.Models.CategoryListModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<body style="background-color:darkgrey">
+    <div class="container d-flex justify-content-center align-items-center">
+        <div class="row">
+            <div class="col-xs-8 col-xs-offset-1">
+                <div class="input-group">
+                    <form asp-controller="Products" asp-action="Index" method="get">
+                        <p>
+                            <select asp-for="ProductCategory" asp-items="@Model.Categories" style="height:32px;background-color:transparent">
+                                <option value=""> All</option>
+                            </select>
+                            <input class="mw-100 input-group-lg" style="width:350px;height:32px;border:1px solid blue"  type="text" asp-for="SearchString" />
+                            <input class="btn btn-primary" type="submit" value="Search" />
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ml-3 mb-2">
+        <div class="row">
+            @if (User.IsInRole(Supermarket_Application.Constants.AdminRole))
+            {
+                <a class="btn btn-success mr-1" asp-action="Create">Create New Product</a>
+            }
+        </div>
+    </div>
+
+
+    @if (User.IsInRole(Supermarket_Application.Constants.AdminRole))
+    {
+        <table class="table fa-window-maximize">
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Details
+                    </th>
+                    <th>
+                        Price
+                    </th>
+                    <th>
+                        Image Path
+                    </th>
+                    <th>
+                        Category
+                    </th>
+                    <th>
+                        Actions
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Products)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Details)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Image)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CategoryID)
+                        </td>
+                        <td>
+                            <div class="row ml-1">
+                                <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.ProductID">Edit</a> |
+                                <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ProductID">Details</a> |
+                                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ProductID">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else //Customer
+    {
+        <div class="container d-flex justify-content-center mt-20 mb-20">
+            <div class="row">
+                @foreach (var item in Model.Products)
+                {
+                    <div class="col-md-3 mt-2">
+                        <div class="card">
+                            <form method="post">
+                                <div class="card-body">
+                                    <div class="card-img-actions"> <img src="@Constants.ImagePath@item.Image" class="card-img img-fluid" width="100" height="300" alt=""> </div>
+                                </div>
+                                <div class="card-body bg-light text-center">
+                                    <div class="mb-1">
+                                        <h6 class="font-weight-semibold mb-2"> <a href="#" class="text-default mb-2" data-abc="true">@item.Name</a> </h6>
+                                        <a href="#" class="text-muted" data-abc="true">@item.Name</a>
+                                    </div>
+                                    <h3 class="mb-0 font-weight-semibold">@item.Price $</h3>
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        <button type="submit" asp-route-id="Model.Product.ProductID" asp-controller="Products" asp-action="AddToCart" class="btn btn-primary"><i class="fa fa-shopping-cart fa-2x"></i></button>
+                                    }
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</body>
+

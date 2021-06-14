@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Supermarket_Application.Models.Category>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="text-center">
+    <div class="row">
+        @if (User.IsInRole(Supermarket_Application.Constants.AdminRole))
+        {
+            <a class="btn btn-success mr-1" asp-action="Create">Create New Category</a>
+        }
+    </div>
+</div>
+
+@if (User.IsInRole(Supermarket_Application.Constants.AdminRole))
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        <div class="row flex-row">
+                            <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.CategoryID">Edit</a> |
+                            <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.CategoryID">Details</a> |
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.CategoryID">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <partial name="_AccessDenied" />
+}
+
+

@@ -1,0 +1,110 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> Supermarket </title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+</head>
+<body style="background-color:aliceblue">
+    @if (User.IsInRole(Supermarket_Application.Constants.AdminRole))
+    {
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-success border-bottom box-shadow mb-3 ">
+                <div class="container">
+                    <a class="navbar-brand text-white font-weight-bold" asp-area="" asp-controller="Products" asp-action="Index">Admin</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-white font-weight-bold" asp-area="" asp-controller="Products" asp-action="Index">Products</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white font-weight-bold" asp-area="" asp-controller="Categories" asp-action="Index">Categories</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <partial name="_LoginPartial" />
+                <a class="ml-1 btn btn-primary font-weight-bold" style="width:300px" asp-area="Identity" asp-page="/Account/Register">Register New Admin</a>
+            </nav>
+        </header>
+    }
+    else
+    {
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-success border-bottom box-shadow mb-3">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <h4 class="text-white font-weight-bold">Supermarket</h4>
+                }
+                else
+                {
+                    <h4 class="text-white font-weight-bold">Welcome,Login To Start Shopping</h4>
+                }
+
+                <div class="container">
+                    @if (HttpContextAccessor.HttpContext.Session.Get<List<ShoppingCart>>(Constants.SessionCart) != null)
+                    {
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <div>
+                                <a class="nav-link text-white font-weight-bold" asp-action="Index" asp-controller="Cart">
+                                    @{
+                                        var count = HttpContextAccessor.HttpContext.Session.Get<List<ShoppingCart>>(Constants.SessionCart).Count;
+                                    }
+                                    <i class="fa fa-shopping-cart fa-2x" style="color:white"></i>&nbsp; (@count)
+                                </a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <div>
+                                <a class="nav-link text-white font-weight-bold">
+                                    <i class="fa fa-shopping-cart fa-2x" style="color:white"></i> &nbsp; (0)
+                                </a>
+                            </div>
+                        }
+                    }
+                </div>
+                <partial name="_LoginPartial" />
+            </nav>
+        </header>
+    }
+
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2021 - Supermarket_Application - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
