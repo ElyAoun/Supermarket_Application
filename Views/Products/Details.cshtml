@@ -6,12 +6,12 @@
 
 @if (User.IsInRole(Supermarket_Application.Constants.AdminRole))
 {
-    <h1>Details</h1>
+    <h1 class="text-center">Details</h1>
 
     <div>
-        <h4>Product</h4>
+        <h4 class="text-center">Product</h4>
         <hr />
-        <dl class="row">
+        <dl class="row d-flex justify-content-center align-items-center">
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.Name)
             </dt>

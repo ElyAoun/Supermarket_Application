@@ -12,9 +12,14 @@ namespace Supermarket_Application.Models
         [Key]
         public int ProductID { get; set; }
 
+        [Required]
+        [StringLength(100, ErrorMessage = "Length must be minimum {2} characters.", MinimumLength = 10)]
         public string Name { get; set; }
 
+        [Required]
+        [StringLength(1000, ErrorMessage = "Too Short.", MinimumLength = 50)]
         public string Details { get; set; }
+
 
         [Range(1, double.MaxValue)]
         public double Price { get; set; }

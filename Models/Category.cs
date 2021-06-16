@@ -12,6 +12,8 @@ namespace Supermarket_Application.Models
         public int CategoryID { get; set; }
 
         [Required]
+        [StringLength(100, ErrorMessage = "Categroy name should be at least {2}", MinimumLength = 5)]
+
         public string Name { get; set; }
     }
 }
